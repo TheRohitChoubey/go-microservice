@@ -1,0 +1,65 @@
+<div>
+    <div class="row">
+        <div class="col-2">
+            <div class="card border-primary">
+                <h6 class="card-header h2">Create An Album</h6>
+                <div class="card-body bg-primary text-success">
+                    <div class="form-group">
+                        <form [formGroup]="newAlbumForm" (ngSubmit)="submitAlbumName()" novalidate>
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="inputEmail4" class="text-white">Enter an Album name ... </label>
+                                    <input type="text" formControlName="newAlbumName" class="form-control" placeholder="Album Name">
+                                    <input type="submit" class="btn btn-success btn-lg" value="Create new album" />
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <header>
+                <nav class="nav flex-column">
+                    <div class="card border-primary">
+                        <h6 class="card-header h2">All Albums</h6>
+                        <div *ngFor="let item of allAlbumNames">
+                            <button class="nav-link active" (click)="getAllImages(item)">{{item}}  <button class="btn" (click)="deleteAlbum(item)"><i class="fa fa-trash"></i></button></button>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+        </div>
+
+        <div class="col-10">
+            <div *ngIf="(isAlbumChosen)">
+                <div class="col-6">
+                    <div class="card border-primary">
+                        <h6 class="card-header h2">Upload a new image to {{chosenAlbum}} Album</h6>
+                        <div class="card-body bg-primary text-success">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label for="inputEmail4" class="text-white">Choose the image to be uploaded ... </label>
+                                        <input class="form-control" type="file" (change)="onChange($event)">
+                                        <button (click)="onUpload()" class="btn btn-success"> Upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3" *ngFor="let img of allImageNames">
+                        <a class="thumbnail" target="_blank" href="../assets/image/{{chosenAlbum}}/{{img}}">
+                            <img class="img-responsive" src="../assets/image/{{chosenAlbum}}/{{img}}" alt="{{img}}"> Click here to open
+                        </a>
+                        <button class="btn" (click)="deleteImage(img,chosenAlbum)"><i class="fa fa-trash"></i></button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<router-outlet></router-outlet>
