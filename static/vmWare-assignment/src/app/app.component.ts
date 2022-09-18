@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   chosenAlbum:String = ""
   newAlbumForm: FormGroup
   file: File = null;
+  baseUrl = "http://ip172-18-0-28-ccjmdqld48eg00a85oq0-80.direct.labs.play-with-docker.com"
 
   constructor(private route: ActivatedRoute, private router: Router,private fileUploadService: FileUploadService) {}
 
@@ -24,7 +25,7 @@ export class AppComponent implements OnInit {
       newAlbumName: new FormControl("")
     })
 
-    let url = `http://localhost:80/getAllAlbums`;
+    let url = `${this.baseUrl}/getAllAlbums`;
       fetch(url)
         .then(res => res.json())
         .then(response => {
@@ -36,7 +37,7 @@ export class AppComponent implements OnInit {
 
   submitAlbumName(){
     let name = this.newAlbumForm.value.newAlbumName;
-    let url = `http://localhost:80/createAlbum/${name}`;
+    let url = `${this.baseUrl}/createAlbum/${name}`;
       fetch(url)
         .then(res => res.json())
         .then(response => {
@@ -53,7 +54,7 @@ export class AppComponent implements OnInit {
 
   onUpload(){
     console.log(this.file);
-    this.fileUploadService.upload(this.file,this.chosenAlbum).subscribe(
+    this.fileUploadService.upload(this.file,this.chosenAlbum,this.baseUrl).subscribe(
         (event: any) => {
           console.log(event)
         }
@@ -61,7 +62,7 @@ export class AppComponent implements OnInit {
   }
 
   deleteAlbum(albumName){
-    let url = `http://localhost:80/deleteAlbum/${albumName}`;
+    let url = `${this.baseUrl}/deleteAlbum/${albumName}`;
     fetch(url)
       .then(res => res.json())
       .then(response => {
@@ -73,7 +74,7 @@ export class AppComponent implements OnInit {
   }
 
   getAllImages(albumName){
-    let url = `http://localhost:80/getAllImages/${albumName}`;
+    let url = `${this.baseUrl}/getAllImages/${albumName}`;
     this.isAlbumChosen = true
     this.chosenAlbum = albumName
     fetch(url)
@@ -85,7 +86,7 @@ export class AppComponent implements OnInit {
   }
 
   deleteImage(img,chosenAlbum){
-    let url = `http://localhost:80/deleteImageFromAlbum/${chosenAlbum}/${img}`;
+    let url = `${this.baseUrl}/deleteImageFromAlbum/${chosenAlbum}/${img}`;
     this.isAlbumChosen = true
     this.chosenAlbum = chosenAlbum
     fetch(url)

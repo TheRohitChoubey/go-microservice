@@ -11,8 +11,8 @@ export class FileUploadService {
     
   constructor(private http:HttpClient) { }
 
-  upload(file,albumName):Observable<any> {
-      this.baseApiUrl = `http://localhost:80/uploadImage/${albumName}`
+  upload(file,albumName,baseUrl):Observable<any> {
+      this.baseApiUrl = `${baseUrl}/uploadImage/${albumName}`
       const formData = new FormData(); 
         
       // Store form name as "file" with file data
