@@ -1,4 +1,4 @@
-module github.com/TheRohitChoubey/go-microservice.git
+module github.com/TheRohitChoubey/go-microservice
 
 go 1.19
 
