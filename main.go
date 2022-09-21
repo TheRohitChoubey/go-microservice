@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -37,6 +38,16 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 
 	//display the path
 	log.Println(curdir)
+
+	files, err := ioutil.ReadDir(curdir)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, file := range files {
+		fmt.Println(file.Name(), file.IsDir())
+	}
+
 	fmt.Fprintf(w, "Application is Up and Running")
 }
 
@@ -46,7 +57,7 @@ func openHtmlView(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	r := mux.NewRouter()
-	tpl, _ = tpl.ParseGlob("/app/client/*.html")
+	tpl, _ = tpl.ParseGlob("/*.html")
 	r.HandleFunc("/", rootHandler)
 	r.HandleFunc("/client", openHtmlView)
 	r.HandleFunc("/getAllAlbums", albumUtility.GetAllAlbumsHandler)

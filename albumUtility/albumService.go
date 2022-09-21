@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var rootPath = "./images/"
+var rootPath = "/images/"
 
 func CreateAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
