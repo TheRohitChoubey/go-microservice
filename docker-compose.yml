@@ -1,0 +1,9 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: dockerfile
+    image: go-app-ms:latest
+    ports:
+      - "80:80"
+    restart: always

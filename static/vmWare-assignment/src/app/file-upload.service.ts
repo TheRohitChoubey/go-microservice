@@ -7,17 +7,24 @@ import { Observable } from 'rxjs';
 })
 export class FileUploadService {
   // API url
-  baseApiUrl = ""
+  baseApiUrl = "http://localhost:80"
     
   constructor(private http:HttpClient) { }
 
-  upload(file,albumName,baseUrl):Observable<any> {
-      this.baseApiUrl = `${baseUrl}/uploadImage/${albumName}`
+  upload(file,api):Observable<any> {
+      let apiUrl = this.baseApiUrl+ api
       const formData = new FormData(); 
         
       // Store form name as "file" with file data
       formData.append("file", file, file.name);
   
-      return this.http.post(this.baseApiUrl, formData)
+      return this.http.post(apiUrl, formData)
   }
+
+  fetchData(api):Observable<any> {
+    let apiUrl = this.baseApiUrl+ api
+    return this.http.get(apiUrl)
+  }
+
+
 }

@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   chosenAlbum:String = ""
   newAlbumForm: FormGroup
   file: File = null;
-  baseUrl = "http://ip172-18-0-28-ccjmdqld48eg00a85oq0-80.direct.labs.play-with-docker.com"
+  apiUrl: String = ""
 
   constructor(private route: ActivatedRoute, private router: Router,private fileUploadService: FileUploadService) {}
 
@@ -25,27 +25,26 @@ export class AppComponent implements OnInit {
       newAlbumName: new FormControl("")
     })
 
-    let url = `${this.baseUrl}/getAllAlbums`;
-      fetch(url)
-        .then(res => res.json())
-        .then(response => {
-              this.allAlbumNames = response
-              console.log(this.allAlbumNames)
-          });
+    this.apiUrl = `/getAllAlbums`;
+
+    this.fileUploadService.fetchData(this.apiUrl).subscribe(
+      (response: any) => {
+        this.allAlbumNames = response
+        console.log(this.allAlbumNames)
+      });
   }
 
 
   submitAlbumName(){
     let name = this.newAlbumForm.value.newAlbumName;
-    let url = `${this.baseUrl}/createAlbum/${name}`;
-      fetch(url)
-        .then(res => res.json())
-        .then(response => {
-              this.allAlbumNames = response
-              console.log(this.allAlbumNames)
-          });
-          this.isAlbumChosen =false
-          this.chosenAlbum = ""
+    this.apiUrl = `/createAlbum/${name}`;
+    this.fileUploadService.fetchData(this.apiUrl).subscribe(
+      (response: any) => {
+        this.allAlbumNames = response
+        console.log(this.allAlbumNames)
+        this.isAlbumChosen =false
+        this.chosenAlbum = ""
+      });
   }
 
   onChange(event) {
@@ -54,49 +53,52 @@ export class AppComponent implements OnInit {
 
   onUpload(){
     console.log(this.file);
-    this.fileUploadService.upload(this.file,this.chosenAlbum,this.baseUrl).subscribe(
-        (event: any) => {
-          console.log(event)
+    this.apiUrl = `/uploadImage/${this.chosenAlbum}`
+    this.fileUploadService.upload(this.file,this.apiUrl).subscribe(
+        (response: any) => {
+          this.allImageNames = response
+          console.log(this.allImageNames)
+          this.isAlbumChosen = true
+          this.chosenAlbum = this.chosenAlbum
         }
     );
   }
 
   deleteAlbum(albumName){
-    let url = `${this.baseUrl}/deleteAlbum/${albumName}`;
-    fetch(url)
-      .then(res => res.json())
-      .then(response => {
-            this.allAlbumNames = response
-            console.log(this.allAlbumNames)
-        });
+    this.apiUrl = `/deleteAlbum/${albumName}`;
+    this.fileUploadService.fetchData(this.apiUrl).subscribe(
+      (response: any) => {
+        this.allAlbumNames = response
+        console.log(this.allAlbumNames)
         this.isAlbumChosen =false
         this.chosenAlbum = ""
+      });
   }
 
   getAllImages(albumName){
-    let url = `${this.baseUrl}/getAllImages/${albumName}`;
+    this.apiUrl = `/getAllImages/${albumName}`;
     this.isAlbumChosen = true
     this.chosenAlbum = albumName
-    fetch(url)
-      .then(res => res.json())
-      .then(response => {
-            this.allImageNames = response
-            console.log(this.allImageNames)
-        });
+
+    this.fileUploadService.fetchData(this.apiUrl).subscribe(
+      (response: any) => {
+        this.allImageNames = response
+        console.log(this.allImageNames)
+      });
   }
 
   deleteImage(img,chosenAlbum){
-    let url = `${this.baseUrl}/deleteImageFromAlbum/${chosenAlbum}/${img}`;
+    this.apiUrl = `/deleteImageFromAlbum/${chosenAlbum}/${img}`;
     this.isAlbumChosen = true
     this.chosenAlbum = chosenAlbum
-    fetch(url)
-      .then(res => res.json())
-      .then(response => {
-            this.allImageNames = response
-            console.log(this.allImageNames)
-        });
+
+    this.fileUploadService.fetchData(this.apiUrl).subscribe(
+      (response: any) => {
+        this.allImageNames = response
+        console.log(this.allImageNames)
         this.isAlbumChosen = true
         this.chosenAlbum = chosenAlbum
+      });
   }
 
 

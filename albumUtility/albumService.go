@@ -11,10 +11,13 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var rootPath = "/app/dist/vmWare-assignment/assets/image/"
+
 func CreateAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	albumName := params["albumName"]
-	if err := os.MkdirAll("./static/vmWare-assignment/src/assets/image/"+albumName, os.ModePerm); err != nil {
+	log.Println("Inside CreateAlbumHandler", albumName)
+	if err := os.MkdirAll(rootPath+albumName, os.ModePerm); err != nil {
 		log.Fatal(err)
 	}
 	GetAllAlbumsHandler(w, r)
@@ -23,7 +26,7 @@ func CreateAlbumHandler(w http.ResponseWriter, r *http.Request) {
 func DeleteAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	albumName := params["albumName"]
-	if err := os.RemoveAll("./static/vmWare-assignment/src/assets/image/" + albumName); err != nil {
+	if err := os.RemoveAll(rootPath + albumName); err != nil {
 		log.Fatal(err)
 	}
 	GetAllAlbumsHandler(w, r)
@@ -48,7 +51,9 @@ func GetAllAlbums(root string) []string {
 }
 
 func GetAllAlbumsHandler(w http.ResponseWriter, r *http.Request) {
-	albumNames := GetAllAlbums("./static/vmWare-assignment/src/assets/image/")
+
+	log.Println("Inside GetAllAlbumsHandler")
+	albumNames := GetAllAlbums(rootPath)
 	response := albumNames
 	json.NewEncoder(w).Encode(response)
 }
@@ -56,7 +61,7 @@ func GetAllAlbumsHandler(w http.ResponseWriter, r *http.Request) {
 func GetAllImagesHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	albumName := params["albumName"]
-	imageNames := GetAllAlbums("./static/vmWare-assignment/src/assets/image/" + albumName)
+	imageNames := GetAllAlbums(rootPath + albumName)
 	response := imageNames
 	json.NewEncoder(w).Encode(response)
 }
@@ -66,10 +71,10 @@ func DeleteImageFromAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	albumName := params["albumName"]
 	imageName := params["imageName"]
 
-	if err := os.RemoveAll("./static/vmWare-assignment/src/assets/image/" + albumName + "/" + imageName); err != nil {
+	if err := os.RemoveAll(rootPath + albumName + "/" + imageName); err != nil {
 		log.Fatal(err)
 	}
-	imageNames := GetAllAlbums("./static/vmWare-assignment/src/assets/image/" + albumName)
+	imageNames := GetAllAlbums(rootPath + albumName)
 	response := imageNames
 	json.NewEncoder(w).Encode(response)
 }
@@ -77,6 +82,8 @@ func DeleteImageFromAlbumHandler(w http.ResponseWriter, r *http.Request) {
 func UploadImageHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	albumName := params["albumName"]
+
+	log.Print("Albumname is = ", albumName, "  = ", r)
 
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("file")
@@ -86,7 +93,7 @@ func UploadImageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 	fmt.Fprintf(w, "%v", handler.Header)
-	f, err := os.OpenFile("./static/vmWare-assignment/src/assets/image/"+albumName+"/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+	f, err := os.OpenFile(rootPath+albumName+"/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -94,7 +101,7 @@ func UploadImageHandler(w http.ResponseWriter, r *http.Request) {
 	defer f.Close()
 	io.Copy(f, file)
 
-	imageNames := GetAllAlbums("./static/vmWare-assignment/src/assets/image/" + albumName)
+	imageNames := GetAllAlbums(rootPath + albumName)
 	response := imageNames
 	json.NewEncoder(w).Encode(response)
 }

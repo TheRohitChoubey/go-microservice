@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+
+kind: Deployment
+metadata:
+  name: client-web-deployment
+  labels:
+    app: client-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: client-web
+  template:
+    metadata:
+      labels:
+        app: client-web
+    spec:
+      containers:
+      - name: go-client-web-app
+        image: go-client-app-ms:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
