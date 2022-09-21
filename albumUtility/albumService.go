@@ -11,12 +11,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var rootPath = "/app/dist/vmWare-assignment/assets/image/"
+var rootPath = "./images/"
 
 func CreateAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	albumName := params["albumName"]
-	log.Println("Inside CreateAlbumHandler", albumName)
 	if err := os.MkdirAll(rootPath+albumName, os.ModePerm); err != nil {
 		log.Fatal(err)
 	}
@@ -79,11 +78,24 @@ func DeleteImageFromAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+func GetImageFromAlbumHandler(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	albumName := params["albumName"]
+	imageName := params["imageName"]
+
+	img, err := os.Open(rootPath + albumName + "/" + imageName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer img.Close()
+	w.Header().Set("Content-Disposition", "attachment; filename="+imageName)
+	w.Header().Set("Content-Type", "application/force-download")
+	io.Copy(w, img)
+}
+
 func UploadImageHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	albumName := params["albumName"]
-
-	log.Print("Albumname is = ", albumName, "  = ", r)
 
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("file")
