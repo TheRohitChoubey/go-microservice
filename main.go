@@ -57,7 +57,7 @@ func openHtmlView(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	r := mux.NewRouter()
-	tpl, _ = tpl.ParseGlob("/client/*.html")
+	tpl, _ = tpl.ParseGlob("/*.html")
 	r.HandleFunc("/", openHtmlView)
 	r.HandleFunc("/client", rootHandler)
 	r.HandleFunc("/getAllAlbums", albumUtility.GetAllAlbumsHandler)
