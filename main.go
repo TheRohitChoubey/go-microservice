@@ -4,10 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	albumUtility "github.com/TheRohitChoubey/go-microservice/albumUtility"
@@ -28,26 +26,6 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Serving HomePage")
 	w.WriteHeader(http.StatusOK)
-	curdir, err := os.Getwd()
-
-	//check if any error occurs
-	if err != nil {
-		//display error if
-		fmt.Println(err)
-	}
-
-	//display the path
-	log.Println(curdir)
-
-	files, err := ioutil.ReadDir(curdir)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, file := range files {
-		fmt.Println(file.Name(), file.IsDir())
-	}
-
 	fmt.Fprintf(w, "Application is Up and Running")
 }
 
@@ -55,15 +33,10 @@ func openHtmlView(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "index.html", nil)
 }
 
-func serveFiles(w http.ResponseWriter, r *http.Request) {
-	p := "index.html"
-	http.ServeFile(w, r, p)
-}
-
 func main() {
 	r := mux.NewRouter()
 	tpl, _ = tpl.ParseGlob("/*.html")
-	r.HandleFunc("/", serveFiles)
+	r.HandleFunc("/", openHtmlView)
 	r.HandleFunc("/client", rootHandler)
 	r.HandleFunc("/getAllAlbums", albumUtility.GetAllAlbumsHandler)
 	r.HandleFunc("/createAlbum/{albumName}", albumUtility.CreateAlbumHandler)
