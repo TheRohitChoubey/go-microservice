@@ -1,9 +1,11 @@
-FROM golang:1.9
-
+FROM golang:latest as builder
 WORKDIR /app
+COPY go.mod go.sum client ./
+RUN go mod download
 COPY . .
-RUN go build -ldflags "-linkmode external -extldflags -client" -a main.go
+RUN go build -o main .
 
-FROM scratch
-COPY --from=0 /app/main /main
+FROM gcr.io/distroless/base-debian11
+COPY --from=builder /app/main .
+EXPOSE 80
 CMD ["/main"]
