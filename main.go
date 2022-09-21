@@ -55,10 +55,15 @@ func openHtmlView(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "index.html", nil)
 }
 
+func serveFiles(w http.ResponseWriter, r *http.Request) {
+	p := "index.html"
+	http.ServeFile(w, r, p)
+}
+
 func main() {
 	r := mux.NewRouter()
 	tpl, _ = tpl.ParseGlob("/*.html")
-	r.HandleFunc("/", openHtmlView)
+	r.HandleFunc("/", serveFiles)
 	r.HandleFunc("/client", rootHandler)
 	r.HandleFunc("/getAllAlbums", albumUtility.GetAllAlbumsHandler)
 	r.HandleFunc("/createAlbum/{albumName}", albumUtility.CreateAlbumHandler)
