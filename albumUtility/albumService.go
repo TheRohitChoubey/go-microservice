@@ -51,7 +51,18 @@ func GetAllAlbums(root string) []string {
 
 func GetAllAlbumsHandler(w http.ResponseWriter, r *http.Request) {
 
-	log.Println("Inside GetAllAlbumsHandler", rootPath)
+	log.Println("Inside GetAllAlbumsHandler")
+	curdir, err := os.Getwd()
+
+	//check if any error occurs
+	if err != nil {
+		//display error if
+		fmt.Println(err)
+	}
+
+	//display the path
+	log.Println(curdir)
+
 	albumNames := GetAllAlbums(rootPath)
 	response := albumNames
 	json.NewEncoder(w).Encode(response)

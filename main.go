@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	albumUtility "github.com/TheRohitChoubey/go-microservice/albumUtility"
@@ -26,6 +27,16 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Serving HomePage")
 	w.WriteHeader(http.StatusOK)
+	curdir, err := os.Getwd()
+
+	//check if any error occurs
+	if err != nil {
+		//display error if
+		fmt.Println(err)
+	}
+
+	//display the path
+	log.Println(curdir)
 	fmt.Fprintf(w, "Application is Up and Running")
 }
 
