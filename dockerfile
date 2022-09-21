@@ -9,3 +9,9 @@ FROM gcr.io/distroless/base-debian11
 COPY --from=builder /app/main .
 EXPOSE 80
 CMD ["/main"]
+
+
+FROM nginx:alpine
+WORKDIR /app
+COPY . .
+COPY ./nginx.conf /etc/nginx/nginx.conf
