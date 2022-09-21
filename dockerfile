@@ -1,17 +1,9 @@
-FROM golang:latest as builder
-WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-RUN go build -o main .
+FROM golang:1.9
 
-FROM gcr.io/distroless/base-debian11
-COPY --from=builder /app/main .
-EXPOSE 80
+WORKDIR /go/src/github.com/purplebooth/example
+COPY . .
+RUN go build -ldflags "-linkmode external -extldflags -client" -a main.go
+
+FROM scratch
+COPY --from=0 /go/src/github.com/purplebooth/example/main /main
 CMD ["/main"]
-
-
-FROM nginx:alpine
-WORKDIR /app
-COPY . .
-COPY ./nginx.conf /etc/nginx/nginx.conf
