@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
   file: File = null;
   apiUrl: String = ""
   baseApiUrl = ""
+  extension = ["jpg","png","jpeg","gif"]
 
   constructor(private route: ActivatedRoute, private router: Router,private fileUploadService: FileUploadService) {
     this.baseApiUrl = fileUploadService.baseApiUrl
@@ -39,7 +40,6 @@ export class AppComponent implements OnInit {
     this.fileUploadService.fetchData(this.apiUrl).subscribe(
       (response: any) => {
         this.allAlbumNames = response
-        console.log(this.allAlbumNames)
       });
   }
 
@@ -50,7 +50,6 @@ export class AppComponent implements OnInit {
     this.fileUploadService.fetchData(this.apiUrl).subscribe(
       (response: any) => {
         this.allAlbumNames = response
-        console.log(this.allAlbumNames)
         this.isAlbumChosen =false
         this.chosenAlbum = ""
         this.newAlbumForm.reset()
@@ -61,9 +60,13 @@ export class AppComponent implements OnInit {
 
   onChange(event) {
     this.file = event.target.files[0];
-    if(this.file.type != "image/jpeg"){
+    let ext = this.file.name.split('.').pop(); 
+    let allowed = this.extension.find( p => {
+      p == ext
+    })
+    if(allowed){
       this.uploadImageForm.reset()
-      alert("Please select a image file to upload")
+      alert("Please select a image file to upload, only jpg, png, jpeg, gif are allowed")
     }
   }
 
@@ -96,7 +99,6 @@ export class AppComponent implements OnInit {
     this.fileUploadService.fetchData(this.apiUrl).subscribe(
       (response: any) => {
         this.allAlbumNames = response
-        console.log(this.allAlbumNames)
         this.isAlbumChosen =false
         this.chosenAlbum = ""
       });
@@ -110,7 +112,6 @@ export class AppComponent implements OnInit {
     this.fileUploadService.fetchData(this.apiUrl).subscribe(
       (response: any) => {
         this.allImageNames = response
-        console.log(this.allImageNames)
       });
   }
 
@@ -122,7 +123,6 @@ export class AppComponent implements OnInit {
     this.fileUploadService.fetchData(this.apiUrl).subscribe(
       (response: any) => {
         this.allImageNames = response
-        console.log(this.allImageNames)
         this.isAlbumChosen = true
         this.chosenAlbum = chosenAlbum
       });
