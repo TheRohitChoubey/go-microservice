@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class FileUploadService {
   // API url
-  baseApiUrl = "http://ip172-18-0-52-ccm04koja8q000cnvcd0-80.direct.labs.play-with-docker.com"
+  // localhost:80
+  baseApiUrl = "http://localhost:80"
     
   constructor(private http:HttpClient) { }
 

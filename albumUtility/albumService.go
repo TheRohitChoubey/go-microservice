@@ -13,7 +13,13 @@ import (
 
 var rootPath = "/images/"
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
+
 func CreateAlbumHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	log.Println("logs in CreateAlbumHandler")
 	params := mux.Vars(r)
 	albumName := params["albumName"]
 	if err := os.MkdirAll(rootPath+albumName, os.ModePerm); err != nil {
@@ -23,6 +29,8 @@ func CreateAlbumHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteAlbumHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	log.Println("logs in DeleteAlbumHandler")
 	params := mux.Vars(r)
 	albumName := params["albumName"]
 	if err := os.RemoveAll(rootPath + albumName); err != nil {
@@ -33,6 +41,7 @@ func DeleteAlbumHandler(w http.ResponseWriter, r *http.Request) {
 
 func GetAllAlbums(root string) []string {
 	var files []string
+	log.Println("logs in GetAllAlbums")
 	f, err := os.Open(root)
 	if err != nil {
 		return files
@@ -50,6 +59,7 @@ func GetAllAlbums(root string) []string {
 }
 
 func GetAllAlbumsHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 
 	log.Println("Inside GetAllAlbumsHandler")
 	curdir, err := os.Getwd()
@@ -69,14 +79,18 @@ func GetAllAlbumsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllImagesHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	params := mux.Vars(r)
 	albumName := params["albumName"]
+	log.Println("logs in GetAllImagesHandler")
 	imageNames := GetAllAlbums(rootPath + albumName)
 	response := imageNames
 	json.NewEncoder(w).Encode(response)
 }
 
 func DeleteImageFromAlbumHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	log.Println("logs in DeleteImageFromAlbumHandler")
 	params := mux.Vars(r)
 	albumName := params["albumName"]
 	imageName := params["imageName"]
@@ -90,6 +104,7 @@ func DeleteImageFromAlbumHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetImageFromAlbumHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	params := mux.Vars(r)
 	albumName := params["albumName"]
 	imageName := params["imageName"]
@@ -98,6 +113,7 @@ func GetImageFromAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("logs in GetImageFromAlbumHandler")
 	defer img.Close()
 	w.Header().Set("Content-Disposition", "attachment; filename="+imageName)
 	w.Header().Set("Content-Type", "application/force-download")
@@ -105,6 +121,7 @@ func GetImageFromAlbumHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func UploadImageHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	params := mux.Vars(r)
 	albumName := params["albumName"]
 
@@ -117,6 +134,7 @@ func UploadImageHandler(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 	fmt.Fprintf(w, "%v", handler.Header)
 	f, err := os.OpenFile(rootPath+albumName+"/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+	log.Println("logs in UploadImageHandler", f)
 	if err != nil {
 		fmt.Println(err)
 		return
