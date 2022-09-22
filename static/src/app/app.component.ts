@@ -17,9 +17,11 @@ export class AppComponent implements OnInit {
   newAlbumForm: FormGroup
   file: File = null;
   apiUrl: String = ""
-  baseApiUrl = "http://localhost:80"
+  baseApiUrl = ""
 
-  constructor(private route: ActivatedRoute, private router: Router,private fileUploadService: FileUploadService) {}
+  constructor(private route: ActivatedRoute, private router: Router,private fileUploadService: FileUploadService) {
+    this.baseApiUrl = fileUploadService.baseApiUrl
+  }
 
   ngOnInit() {
     this.newAlbumForm = new FormGroup({
