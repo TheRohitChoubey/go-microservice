@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -74,11 +75,16 @@ export class AppComponent implements OnInit {
           (response: any) => {
             this.isAlbumChosen = true
             this.chosenAlbum = this.chosenAlbum
-            this.newAlbumForm.reset()
+            alert("File uploaded Successfully")
+          }, (err : any) => {
+            this.isAlbumChosen = true
+            this.chosenAlbum = this.chosenAlbum
+            this.getAllImages(this.chosenAlbum)
             alert("File uploaded Successfully")
           }
+          
       );
-      this.newAlbumForm.reset()
+      this.uploadImageForm.reset()
       alert("File upload in progress")
     } else {
       alert("Please select a file to upload")
