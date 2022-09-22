@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
   isAlbumChosen: Boolean = false
   chosenAlbum:String = ""
   newAlbumForm: FormGroup
+  uploadImageForm: FormGroup
   file: File = null;
   apiUrl: String = ""
   baseApiUrl = ""
@@ -28,6 +29,10 @@ export class AppComponent implements OnInit {
       newAlbumName: new FormControl("")
     })
 
+    this.uploadImageForm = new FormGroup({
+      fileUploadControl : new FormControl()
+    })
+    
     this.apiUrl = `/getAllAlbums`;
 
     this.fileUploadService.fetchData(this.apiUrl).subscribe(
@@ -47,24 +52,37 @@ export class AppComponent implements OnInit {
         console.log(this.allAlbumNames)
         this.isAlbumChosen =false
         this.chosenAlbum = ""
+        this.newAlbumForm.reset()
+        alert("New Album Created Successfully")
+        
       });
   }
 
   onChange(event) {
     this.file = event.target.files[0];
+    if(this.file.type != "image/jpeg"){
+      this.uploadImageForm.reset()
+      alert("Please select a image file to upload")
+    }
   }
 
   onUpload(){
     console.log(this.file);
     this.apiUrl = `/uploadImage/${this.chosenAlbum}`
-    this.fileUploadService.upload(this.file,this.apiUrl).subscribe(
-        (response: any) => {
-          this.allImageNames = response
-          console.log(this.allImageNames)
-          this.isAlbumChosen = true
-          this.chosenAlbum = this.chosenAlbum
-        }
-    );
+    if(this.file != null){
+      this.fileUploadService.upload(this.file,this.apiUrl).subscribe(
+          (response: any) => {
+            this.isAlbumChosen = true
+            this.chosenAlbum = this.chosenAlbum
+            this.newAlbumForm.reset()
+            alert("File uploaded Successfully")
+          }
+      );
+      this.newAlbumForm.reset()
+      alert("File upload in progress")
+    } else {
+      alert("Please select a file to upload")
+    }
   }
 
   deleteAlbum(albumName){

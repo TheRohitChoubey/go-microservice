@@ -3,12 +3,12 @@
         <div class="col-2">
             <div class="card border-primary">
                 <h6 class="card-header h2">Create An Album</h6>
-                <div class="card-body bg-primary text-success">
+                <div class="card-body text-success">
                     <div class="form-group">
                         <form [formGroup]="newAlbumForm" (ngSubmit)="submitAlbumName()" novalidate>
                             <div class="row">
                                 <div class="form-group">
-                                    <label for="inputEmail4" class="text-white">Enter an Album name ... </label>
+                                    <label for="inputAlbum4" class="text-white">Enter an Album name ... </label>
                                     <input type="text" formControlName="newAlbumName" class="form-control" placeholder="Album Name">
                                     <input type="submit" class="btn btn-success btn-lg" value="Create new album" />
                                 </div>
@@ -35,13 +35,15 @@
                 <div class="col-6">
                     <div class="card border-primary">
                         <h6 class="card-header h2">Upload a new image to {{chosenAlbum}} Album</h6>
-                        <div class="card-body bg-primary text-success">
+                        <div class="card-body text-success">
                             <div class="form-group">
                                 <div class="row">
                                     <div class="form-group">
-                                        <label for="inputEmail4" class="text-white">Choose the image to be uploaded ... </label>
-                                        <input class="form-control" type="file" (change)="onChange($event)">
-                                        <button (click)="onUpload()" class="btn btn-success"> Upload</button>
+                                        <form [formGroup]="uploadImageForm" (ngSubmit)="onUpload()" novalidate>
+                                            <label for="inputImage4" class="text-white">Choose the image to be uploaded ... </label>
+                                            <input class="form-control" formControlName="fileUploadControl" type="file" (change)="onChange($event)">
+                                            <input type="submit" class="btn btn-success btn-lg" value="Upload" />
+                                        </form>
                                     </div>
                                 </div>
                             </div>
